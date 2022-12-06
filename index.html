@@ -4,9 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="rps.js" defer></script>
     <title>rps</title>
 </head>
 <body>
-    <script src="rps.js"></script>
+    <div class="game-over">
+        <h1>GAME OVER</h1>
+        <h2 class="result"></h2>
+        <button class="play-again">Play again?</button>
+    </div>
+
+    <div class="running">
+        <div class="btns">
+            <button class="rps-button rock">Rock</button>
+            <button class="rps-button paper">Paper</button>
+            <button class="rps-button scissors">Scissors</button>
+        </div>
+    
+        <div class="msg"></div>
+    
+        <div class="current-selections">
+            <img src="" alt="" class="pSelection">
+            <div>VS</div>
+            <img src="" alt="" class="cSelection">
+        </div>
+    
+        <div class="scoreboard-container">
+            <div class="name-titles">
+                <div class="pname">&nbspPLAYER</div>
+                <div class="cname">COMPUTER</div>
+            </div>
+    
+            <div class="scoreboard">
+                <div class="player-score"></div>
+                <span>:</span>
+                <div class="computer-score"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
