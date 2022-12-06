@@ -1,45 +1,95 @@
+const runningDiv = document.querySelector('.running');
+const gameOverDiv = document.querySelector('.game-over');
+const buttons = document.querySelectorAll('.rps-button');
+const playerScoreElement = document.querySelector('.player-score');
+const computerScoreElement = document.querySelector('.computer-score');
+const messageElement = document.querySelector('.msg');
+const bothSelectionsDiv = document.querySelector('.current-selections');
+const pSelectionImg = document.querySelector('.pSelection');
+const cSelectionImg = document.querySelector('.cSelection');
+const winResultDiv = document.querySelector('.result');
+const playAgainButton = document.querySelector('.play-again');
+let playerSelection;
+let playerScore = 0;
+let computerScore = 0;
+gameOverDiv.classList.add('gg');
+
+
 function getComputerChoice() {
     let  options = ['Rock', 'Paper', 'Scissors'];
     let num = Math.floor(Math.random() * 3);
     return options[num];
 }
 
-function playRound(playerSelection, computerSelection) {
-    console.log(computerSelection);
+function playRound() {
+    let computerSelection = getComputerChoice();
+    // below is the pattern used for regex input validation (left over from text input)
     const re = /[rR][oO][cC][kK]$|[pP][aA][pP][eE][rR]$|[sS][cC][iI][sS][sS][oO][rR][sS]$/;
-    if (re.test(playerSelection) && re.test(computerSelection)) {
+    if (re.test(playerSelection) && re.test(computerSelection)) { //if selections pass validation
         playerSelection = playerSelection.toLowerCase();
         computerSelection = computerSelection.toLowerCase();
         switch (playerSelection) {
             case 'rock':
+                pSelectionImg.src = './images/rock.svg'
                 switch (computerSelection) {
                     case 'rock':
-                        return 'Tie.. play again'
+                        cSelectionImg.src = './images/rock.svg'
+                        messageElement.textContent = 'Draw, play again'
+                        break;
                     case 'paper':
-                        return 'You lose! Paper beats Rock'
+                        computerScore+= 1;
+                        cSelectionImg.src = './images/paper.svg'
+                        messageElement.textContent = 'Paper beats rock, you lose..'
+                        computerScoreElement.textContent = computerScore;
+                        break;
                     case 'scissors':
-
-                        return 'You win! Rock beats Scissors'
+                        playerScore+= 1;
+                        cSelectionImg.src = './images/scissors.svg'
+                        messageElement.textContent = 'Rock beats scissors, you win..'
+                        playerScoreElement.textContent = playerScore;
+                        break;
                 }
                 break;
              case 'paper':
+                pSelectionImg.src = './images/paper.svg'
                 switch (computerSelection) {
                     case 'rock':
-                        return 'You win! Paper beats Rock'
+                        playerScore+=1;
+                        cSelectionImg.src = './images/rock.svg'
+                        messageElement.textContent = 'Paper beats rock, you win..'
+                        playerScoreElement.textContent = playerScore;
+                        break;
                     case 'paper':
-                        return 'Tie.. play again'
+                        cSelectionImg.src = './images/paper.svg'
+                        messageElement.textContent = 'Draw, play again'
+                        break;
                     case 'scissors':
-                        return 'You lose! Scissors beats Paper'
+                        computerScore+=1;
+                        cSelectionImg.src = './images/scissors.svg'
+                        messageElement.textContent = 'Scissors beats paper, you lose..'
+                        computerScoreElement.textContent = computerScore;
+                        break;
                 }
                 break;
-            case 'scissor':
+            case 'scissors':
+                pSelectionImg.src = './images/scissors.svg'
                 switch (computerSelection) {
                     case 'rock':
-                        return 'You lose! Rock beats paper'
+                        computerScore+=1;
+                        cSelectionImg.src = './images/rock.svg'
+                        messageElement.textContent = 'Rock beats scissors, you lose..'
+                        computerScoreElement.textContent = computerScore;
+                        break;
                     case 'paper':
-                        return 'You win! Scissors beats Paper'
+                        playerScore+=1;
+                        cSelectionImg.src = './images/paper.svg'
+                        messageElement.textContent = 'Scissors beats paper, you win..'
+                        playerScoreElement.textContent = playerScore;
+                        break;
                     case 'scissors':
-                        return 'Tie.. play again'
+                        cSelectionImg.src = './images/scissors.svg'
+                        messageElement.textContent = 'Draw, play again'
+                        break;
                 }       
             default:
                 break;
@@ -50,34 +100,43 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let previousRoundTie = false;
-    for (let i = 0; i < 5; i++) {
-        if (previousRoundTie) {
-            i--;
-        }
-        const playerSelection = prompt("Type your choice : ");
-        const computerSelection = getComputerChoice();
-        let gameResult = playRound(playerSelection, computerSelection);
-        console.log(gameResult);
-        if (gameResult.includes('win')) {
-            playerScore++;
-            previousRoundTie = false;
-        } else if (gameResult.includes('lose')){
-            computerScore++;
-            previousRoundTie = false;
-        } else {
-            previousRoundTie = true;
-        }
-        console.log(`Score:\nYou = ${playerScore}\nComputer = ${computerScore}`);
-    }
-    console.log('Game over\n');
-    if (playerScore > computerScore) {
-        console.log('You win! Congrats');
+    if (playerScore < 5 && computerScore < 5) {
+        playRound();
+    } else if (playerScore > computerScore) {
+        winResultDiv.textContent = 'WINNER!'
+        runningDiv.classList.add('gg');
+        gameOverDiv.classList.remove('gg');
     } else {
-        console.log('You lose.. better luck next time');
+        winResultDiv.textContent = 'YOU LOST :('
+        runningDiv.classList.add('gg');
+        gameOverDiv.classList.remove('gg');
     }
+
 }
 
-game();
+function buttonClicked(e) {
+    pSelectionImg.style.display = 'flex'; //unhide images
+    cSelectionImg.style.display = 'flex';
+    playerSelection = this.classList[1]; //extract the selection from the object
+    game();
+}
+
+function start() {
+    playerScore = 0;
+    computerScore = 0
+    messageElement.textContent = 'Make your CHOICE.'
+    pSelectionImg.style.display = 'none'; //hide images when there is no src
+    cSelectionImg.style.display = 'none';
+    playerScoreElement.textContent = playerScore;
+    computerScoreElement.textContent = computerScore;
+    runningDiv.classList.remove('gg');
+    gameOverDiv.classList.add('gg');
+}
+
+//listen for button click event 
+buttons.forEach(button => button.addEventListener('click', buttonClicked))
+
+//listen for play again button
+playAgainButton.addEventListener('click', start);
+
+start();
